@@ -15,9 +15,9 @@
   </footer>
 </template>
 
-<style lang="scss">
+<style lang="scss" scoped>
 footer,
-ul {
+footer ul {
   display: flex;
   justify-content: space-between;
   align-items: center;

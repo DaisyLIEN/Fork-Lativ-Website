@@ -1,6 +1,5 @@
 <template>
-  <div class="wrapper">
-    <Header />
+  <div class="wrapper">    
     <Carousel />
     <section class="section-center-lists">
       <ul class="lists">
@@ -17,14 +16,11 @@
       >
         <img :src="card.image" alt="" />
       </div>
-    </section>
-    <Footer />
+    </section>    
   </div>
 </template>
 
 <script>
-import Header from "../components/Header.vue";
-import Footer from "../components/Footer.vue";
 import Carousel from "../components/Carousel.vue";
 
 const dummyData = {
@@ -120,9 +116,7 @@ const dummyData = {
 
 export default {
   components: {
-    Header,
     Carousel,
-    Footer,
   },
   data() {
     return {
@@ -190,7 +184,7 @@ export default {
       width: calc(50% - 6px);
 
       &:nth-child(4n-3),
-      :nth-child(4n) {
+      &:nth-child(4n) {
         height: 80%;
       }
 

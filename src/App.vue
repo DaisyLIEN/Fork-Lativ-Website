@@ -1,6 +1,8 @@
 <template>
-  <div id="fork-lativ-web-vue">    
+  <div id="fork-lativ-web-vue">
+    <Header />    
     <router-view/>
+    <Footer />
   </div>
 </template>
 
@@ -8,9 +10,15 @@
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap'
 import '@/assets/scss/basic.scss'
+import Header from "./components/Header.vue";
+import Footer from "./components/Footer.vue";
 
 export default {
-  name: 'App'
+  name: 'App',
+  components: {
+    Header,    
+    Footer
+  },
 }
 </script>
 

@@ -14,12 +14,46 @@ const routes = [
   {
     path: '/women',
     name: 'women',
-    component: () => import('../views/Women.vue')
+    component: () => import('../views/Women.vue'),
+    children: [
+      {
+        path: 'tops',
+        name: 'women-tops',
+        component: () => import('../views/WomenTops.vue')
+      },
+      {
+        path: 'shirts',
+        name: 'women-shirts',
+        component: () => import('../views/WomenShirts.vue')
+      },
+      {
+        path: 'outerwear',
+        name: 'women-outerwear',
+        component: () => import('../views/WomenOuterwear.vue')
+      }
+    ]
   },
   {
     path: '/men',
     name: 'men',
-    component: () => import('../views/Men.vue')
+    component: () => import('../views/Men.vue'),
+    children: [
+      {
+        path: 'tops',
+        name: 'men-tops',
+        component: () => import('../views/MenTops.vue')
+      },
+      {
+        path: 'shirts',
+        name: 'men-shirts',
+        component: () => import('../views/MenShirts.vue')
+      },
+      {
+        path: 'outerwear',
+        name: 'men-outerwear',
+        component: () => import('../views/MenOuterwear.vue')
+      }
+    ]
   },
   {
     path: '*',

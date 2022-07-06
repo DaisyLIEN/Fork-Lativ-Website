@@ -51,8 +51,7 @@ header {
   position: fixed;
   z-index: 999;
   width: 100%;
-  height: 105px;
-  margin-bottom: 10px;
+  height: 105px;  
   background: #ffffff;
   /* 陰影 */
   // -webkit-box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.1);
@@ -217,7 +216,7 @@ header {
       all: unset;
 
       .nav-list {
-        display: flex;
+        display: flex;        
         width: 240px;
         font-size: 10px;
 
