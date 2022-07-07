@@ -8,7 +8,7 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '/',
-    name: 'root',
+    name: 'homePage',
     component: HomePage
   },
   {
@@ -54,6 +54,11 @@ const routes = [
         component: () => import('../views/MenOuterwear.vue')
       }
     ]
+  },
+  {
+    path: '/shopping/:step',
+    name: 'shopping',
+    component: () => import('../views/Shopping.vue')    
   },
   {
     path: '*',

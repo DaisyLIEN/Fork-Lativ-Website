@@ -38,7 +38,7 @@
       <ul class="nav-list">
         <li><router-link to="/">訂閱電子報</router-link></li>
         <li><router-link to="/">登入/註冊</router-link></li>
-        <li><router-link to="/">0個商品</router-link></li>
+        <li><router-link to="/shopping/1">0個商品</router-link></li>
       </ul>
     </nav>
   </header>

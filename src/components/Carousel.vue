@@ -92,8 +92,6 @@ export default {
 
 <style lang="scss">
 .carousel {
-  padding-top: 105px;
-
   .carousel-indicators li {
     width: 10px;
     height: 10px;
@@ -112,13 +110,9 @@ export default {
 }
 
 @media screen and (min-width: 768px) {
-  .carousel {
+  .carousel-control-prev,
+  .carousel-control-next {
     padding-top: 0;
-
-    .carousel-control-prev,
-    .carousel-control-next {
-      padding-top: 0;
-    }
   }
 }
 </style>
