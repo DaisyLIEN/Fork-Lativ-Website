@@ -65,7 +65,7 @@ export default {
   },
   created() {
     this.renderStepper(this.initialCurrentStep);
-    console.log('stepper:', this.initialCurrentStep)
+    console.log("stepper:", this.initialCurrentStep);
   },
   methods: {
     renderStepper(currentStep) {
@@ -88,12 +88,12 @@ export default {
       //   { active: true, checked: false },
       // ];
       // step 1
-      console.log('renderstepper')
+      console.log("renderstepper");
       if (currentStep === "1") {
         return this.steps;
         // step 2
       } else if (currentStep === "2") {
-        console.log('renderstepper2')
+        console.log("renderstepper2");
         this.steps = this.steps.map((step) => {
           if (step.number === 1) {
             return {
@@ -121,7 +121,7 @@ export default {
             };
           } else if (step.number === 2) {
             return {
-              ...step,              
+              ...step,
               checked: true,
             };
           } else if (step.number === 3) {
@@ -145,7 +145,7 @@ export default {
           }
           return {
             ...step,
-            active: false,            
+            active: false,
             checked: true,
           };
         });
@@ -173,7 +173,6 @@ export default {
 
 /* Stepper panel */
 .stepper-panel {
-  outline: 1px solid green;
   height: 130px;
   display: flex;
   justify-content: space-between;
@@ -185,7 +184,6 @@ export default {
     @include getStepNums(4);
 
     .step {
-      outline: 1px solid blue;      
       position: relative;
       text-align: center;
       font-size: 15px;
@@ -195,8 +193,8 @@ export default {
         width: 32px;
         height: 32px;
         border-radius: 50%;
-        background-color: #EEEEEE;        
-        color: #BEBEBE;
+        background-color: #eeeeee;
+        color: #bebebe;
         margin: 0 auto;
       }
 
@@ -205,10 +203,10 @@ export default {
         top: 25%;
         right: -50%;
         left: 50%;
-        transform: scaleX(0.6);        
+        transform: scaleX(0.6);
         width: 100%;
         height: 3px;
-        background-color: #EEEEEE;        
+        background-color: #eeeeee;
 
         &.line-four {
           display: none;
@@ -217,21 +215,21 @@ export default {
 
       &.active {
         .circle-container {
-          background-color: #D8CABB;
-          color: #ffffff;          
+          background-color: #d8cabb;
+          color: #ffffff;
         }
       }
 
       &.checked {
         .circle-container,
         + .connect-line {
-          background-color: #D8CABB;
+          background-color: #d8cabb;
         }
 
         .circle-container {
           color: #ffffff;
         }
-      }      
+      }
     }
   }
 }

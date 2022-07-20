@@ -3,9 +3,9 @@ import App from './App.vue'
 import router from './router'
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
-import { faMagnifyingGlass } from '@fortawesome/free-solid-svg-icons'
+import { faMagnifyingGlass, faCartArrowDown, faMinus, faPlus, faXmark } from '@fortawesome/free-solid-svg-icons'
 
-library.add(faMagnifyingGlass)
+library.add(faMagnifyingGlass, faCartArrowDown, faMinus, faPlus, faXmark)
 Vue.component('font-awesome-icon', FontAwesomeIcon)
 
 Vue.config.productionTip = false

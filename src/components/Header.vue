@@ -38,7 +38,14 @@
       <ul class="nav-list">
         <li><router-link to="/">訂閱電子報</router-link></li>
         <li><router-link to="/">登入/註冊</router-link></li>
-        <li><router-link to="/shopping/1">0個商品</router-link></li>
+        <li>
+          <router-link to="/shopping/1"
+            ><font-awesome-icon
+              icon="fa-solid fa-cart-arrow-down"
+              bounce
+            />&nbsp;&nbsp;0個商品</router-link
+          >
+        </li>
       </ul>
     </nav>
   </header>
@@ -51,7 +58,7 @@ header {
   position: fixed;
   z-index: 999;
   width: 100%;
-  height: 105px;  
+  height: 105px;
   background: #ffffff;
   /* 陰影 */
   // -webkit-box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.1);
@@ -216,7 +223,7 @@ header {
       all: unset;
 
       .nav-list {
-        display: flex;        
+        display: flex;
         width: 240px;
         font-size: 10px;
 

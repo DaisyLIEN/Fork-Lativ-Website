@@ -166,10 +166,6 @@ export default {
       width: 100%;
     }
 
-    &:nth-child(15),
-    :nth-child(16) {
-      margin-bottom: 30px;
-    }
   }
 }
 

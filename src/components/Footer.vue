@@ -24,7 +24,7 @@ footer ul {
 }
 
 footer {
-  margin-bottom: 55px;
+  margin: 30px 0 55px;  
   padding-top: 30px;
   border-top: 1px solid #eee;
   text-align: center;
