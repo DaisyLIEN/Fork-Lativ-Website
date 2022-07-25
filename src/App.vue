@@ -9,7 +9,7 @@
 <script>
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap'
-import '@/assets/scss/basic.scss'
+import '@/assets/scss/Basic.scss'
 import Header from "./components/Header.vue";
 import Footer from "./components/Footer.vue";
 

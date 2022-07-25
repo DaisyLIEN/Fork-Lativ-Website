@@ -1,15 +1,15 @@
 <template>
   <div class="main-card">
     <div class="photo">
-      <img :src="initialAllShirt.image" alt="" />
+      <img :src="card.image.main" alt="" />
     </div>
     <div class="text">
-      <p class="title">{{ initialAllShirt.title }}</p>
+      <p class="title">{{ card.title }}</p>
       <p class="price">
-        <span :class="{ onsale: initialAllShirt.onsale }"
-          >NT${{ initialAllShirt.originalPrice }}</span
-        >&nbsp;<span v-show="initialAllShirt.onsale"
-          >活動價 NT${{ initialAllShirt.salePrice }}</span
+        <span :class="{ onsale: card.onSale }"
+          >NT${{ card.originalPrice }}</span
+        >&nbsp;<span v-show="card.onSale"
+          >活動價 NT${{ card.nowPrice }}</span
         >
       </p>
     </div>
@@ -19,31 +19,43 @@
 <script>
 export default {
   props: {
-    initialAllShirt: {
+    initialCards: {
       type: Object,
       required: true,
     },
   },
+  data() {
+    return {
+      card: this.initialCards
+    }
+  },  
+  watch: {
+    initialCards(newValue) {
+      this.card = {
+        ...this.card,
+        ...newValue
+      }
+    }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
 .main-card {
-  // outline: 1px solid green;
+  // outline: 1px solid orange;
   width: 220px;
-  // height: 300px;
 
-  .photo {    
-    aspect-ratio: 1;    
+  .photo {        
+    height: 330px;
     
     img {
       display: block;
-      object-fit: cover;            
+      object-fit: contain;            
     }
   }
 
   .text {
-    margin-top: 20px;
+    margin-top: 25px;
     text-align: center;
     line-height: 25px;
 
