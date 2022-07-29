@@ -1,9 +1,9 @@
 <template>
   <div class="wrapper">
-    <div class="sidebar">
+    <section class="sidebar">
       <Sidebar />
-    </div>
-    <div class="content" v-show=" this.$route.name === 'men' ">
+    </section>
+    <section class="content" v-show="this.$route.name === 'men'">
       <div class="photo">
         <img src="https://i.imgur.com/rGRESkF.jpg" alt="" />
       </div>
@@ -14,15 +14,15 @@
           :initial-cards="menAllShirt"
         />
       </div>
-      <router-view :initial-men-all-shirts="menAllShirts" />
-    </div>
+    </section>
+    <router-view :initial-men-all-shirts="menAllShirts" />
   </div>
 </template>
 
 <script>
 import Sidebar from "../components/Sidebar.vue";
 import MainCard from "../components/MainCard.vue";
-import { dummyData } from "../assets/dummydata/DummyData.js"
+import { dummyData } from "../assets/dummydata/DummyData.js";
 
 export default {
   components: {
@@ -35,7 +35,9 @@ export default {
     };
   },
   created() {
-    this.menAllShirts = dummyData.menAll;
+    this.menAllShirts = dummyData.allShirts.filter((item) => {
+      return item.group === "men";
+    });
   },
 };
 </script>
@@ -46,12 +48,12 @@ export default {
   height: 100%;
   padding-top: 125px;
 
-  .sidebar {    
+  .sidebar {
     width: 20%;
   }
 
-  .content {    
-    flex: 1;    
+  .content {
+    flex: 1;
 
     .photo {
       width: 100%;
@@ -60,7 +62,8 @@ export default {
 
     .cards {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      grid-column-gap: 10px;
       grid-row-gap: 50px;
       justify-items: center;
     }

@@ -28,8 +28,12 @@
       <span class="hamburger"></span>
     </label>
     <ul class="list-category">
-      <li><router-link to="/women">WOMEN</router-link></li>
-      <li><router-link to="/men">MEN</router-link></li>
+      <li :class="{ active: this.$route.name === 'women' }">
+        <router-link to="/women">WOMEN</router-link>
+      </li>
+      <li :class="{ active: this.$route.name === 'men' }">
+        <router-link to="/men">MEN</router-link>
+      </li>
       <li><router-link to="/">KIDS</router-link></li>
       <li><router-link to="/">BABY</router-link></li>
       <li><router-link to="/">SPORTS</router-link></li>
@@ -180,9 +184,13 @@ header {
         content: "";
         width: 1px;
         height: 100%;
-        background: #706e6c;
+        background-color: #706e6c;
         transform: scale(1, 0.5);
         position: absolute;
+      }
+
+      &.active {
+        background-color: #f0ede5;
       }
     }
   }
@@ -227,11 +235,10 @@ header {
         width: 240px;
         font-size: 10px;
 
-        li {
-          /* position: relative; */
+        li {          
           flex: auto;
           margin: 0;
-          opacity: 1;
+          opacity: 1;          
 
           + li::before {
             content: "";
@@ -249,6 +256,13 @@ header {
             }
           }
         }
+      }
+    }
+
+    .list-category {
+      li {
+        height: 28px;
+        line-height: 28px;
       }
     }
   }

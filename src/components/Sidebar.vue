@@ -1,6 +1,6 @@
 <template>
   <nav class="wrapper-sidebar">
-    <p>&nbsp;&nbsp;{{ currentGroup === "women" ? "女" : "男" }}裝新品 & 熱銷</p>
+    <p>&nbsp;&nbsp;{{ currentGroup.includes('women') ? "女" : "男" }}裝新品 & 熱銷</p>
     <ul class="onsale">
       <li><router-link to="/">&nbsp;超值限定．任選350元</router-link></li>
       <li><router-link to="/">&nbsp;驚喜特惠．任選3件399</router-link></li>
@@ -12,7 +12,7 @@
     <ul class="tops">
       <li>
         <router-link
-          :to="{ name: currentGroup === 'women' ? 'women-tops' : 'men-tops' }"
+          :to="{ name: currentGroup.includes('women') ? 'women-tops' : 'men-tops' }"
           >&nbsp;聯名印花短T</router-link
         >
       </li>
@@ -24,7 +24,7 @@
       <li>
         <router-link
           :to="{
-            name: currentGroup === 'women' ? 'women-shirts' : 'men-shirts',
+            name: currentGroup.includes('women') ? 'women-shirts' : 'men-shirts',
           }"
           >&nbsp;休閒襯衫</router-link
         >
@@ -38,7 +38,7 @@
         <router-link
           :to="{
             name:
-              currentGroup === 'women' ? 'women-outerwear' : 'men-outerwear',
+              currentGroup.includes('women') ? 'women-outerwear' : 'men-outerwear',
           }"
           >&nbsp;抗UV系列</router-link
         >
@@ -51,13 +51,21 @@
 
 <script>
 export default {
+  props: {
+    initialGroup: {
+      type: String,
+      // required: true,
+    },
+  },
   data() {
     return {
       currentGroup: "", // women or men
     };
   },
   created() {
-    this.currentGroup = this.$route.name;
+    this.currentGroup = this.initialGroup
+      ? this.initialGroup
+      : this.$route.name;
   },
 };
 </script>

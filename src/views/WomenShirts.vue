@@ -1,6 +1,6 @@
 <template>
   <div class="content">
-    <h5>休閒襯衫</h5>    
+    <h5>休閒襯衫</h5>
     <div class="cards">
       <MainCard
         v-for="womenShirt in womenShirts"
@@ -51,7 +51,8 @@ export default {
   }
   .cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+        grid-column-gap: 10px;
     grid-row-gap: 50px;
     justify-items: center;
   }
