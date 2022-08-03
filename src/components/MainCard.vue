@@ -40,8 +40,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.main-card {
-  // outline: 1px solid orange;
+.main-card {  
   width: 220px;
 
   .photo {

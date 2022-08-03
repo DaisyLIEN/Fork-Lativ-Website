@@ -105,14 +105,6 @@ export default {
   .carousel-control-prev,
   .carousel-control-next {
     width: 40px;
-    padding-top: 105px;
-  }
-}
-
-@media screen and (min-width: 768px) {
-  .carousel-control-prev,
-  .carousel-control-next {
-    padding-top: 0;
   }
 }
 </style>

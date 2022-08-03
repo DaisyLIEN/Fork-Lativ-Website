@@ -8,7 +8,15 @@
         :key="paymentMethods.indexOf(paymentMethod)"
       >
         <label
-          ><input type="radio" name="select-toggle" />{{ paymentMethod }}</label
+          ><input
+            type="radio"
+            name="select-toggle"
+            :value="paymentMethod"
+            v-model="totalInfo.paymentMethod"
+            @change.stop.prevent="
+              renderShippingFee(paymentMethods.indexOf(paymentMethod))
+            "
+          />{{ paymentMethod }}</label
         >
         <div class="text" v-if="paymentMethods.indexOf(paymentMethod) < 2">
           滿&nbsp;1000&nbsp;元免運，運費&nbsp;$&nbsp;50
@@ -22,34 +30,48 @@
       <div class="title">海外配送 Overseas Shipping</div>
       <div class="delivery-area">
         <label for=""></label>
-        <select name="area" id="area" required>
-          <option value="" selected disabled>
+        <select name="area" id="area">
+          <option value="" selected disabled>未開放</option>
+          <!-- <option value="" selected disabled>
             請選擇收貨地區 Delivery Area
           </option>
           <option value="">香港 Hong Kong</option>
           <option value="">馬來西亞 Malaysia</option>
-          <option value="">新加坡 Singapore</option>
+          <option value="">新加坡 Singapore</option> -->
         </select>
       </div>
     </div>
     <div class="total">
       <div class="text">
         <p>
-          <span>共&nbsp;<span>4</span>&nbsp;件商品</span><span>&nbsp;</span>
+          <span
+            >共&nbsp;<span>{{ totalInfo.totalOrder }}</span
+            >&nbsp;件商品</span
+          ><span>&nbsp;</span>
         </p>
         <p>
           <span>商品金額</span><span>活動特惠</span><span>運費</span
           ><span>帳戶折抵</span><span>&nbsp;</span>
         </p>
         <p>
-          <span>$&nbsp;<span>1,196</span></span
-          ><span>-&nbsp;$&nbsp;<span>300</span></span
-          ><span>未選擇</span><span>$&nbsp;<span>0</span></span
+          <span
+            >$&nbsp;<span>{{ totalInfo.totalOriginalAmount }}</span></span
+          ><span
+            >-&nbsp;$&nbsp;<span>{{ totalInfo.eventAccount }}</span></span
+          ><span>$&nbsp;{{ totalInfo.shippingFee }}</span
+          ><span>$&nbsp;<span>0</span></span
           ><span>&nbsp;</span>
         </p>
       </div>
       <div class="amount">
-        <p>小計<span>NT$&nbsp;</span><span>896</span></p>
+        <p>
+          小計<span>NT$&nbsp;</span
+          ><span>{{
+            totalInfo.finalAmount === 0
+              ? totalInfo.amount
+              : totalInfo.finalAmount
+          }}</span>
+        </p>
       </div>
     </div>
     <div class="button-panel">
@@ -57,7 +79,12 @@
         ><button class="button button-primary">返回購物車</button></router-link
       >
       <router-link :to="{ name: 'shopping', params: { step: 3 } }"
-        ><button class="button button-next">下一步</button></router-link
+        ><button
+          class="button button-next"
+          @click.stop.prevent="saveBeforeNextStep()"
+        >
+          下一步
+        </button></router-link
       >
     </div>
   </section>
@@ -65,6 +92,12 @@
 
 <script>
 export default {
+  props: {
+    initialTotalInfo: {
+      type: Object,
+      required: true,
+    },
+  },
   data() {
     return {
       paymentMethods: [
@@ -74,7 +107,57 @@ export default {
         "LINE Pay (可用 LINE Points 折抵)",
         "宅配貨到付款 (限台灣本島)",
       ],
+      totalInfo: {
+        totalOrder: 0,
+        totalOriginalAmount: 0,
+        eventAccount: 0,
+        amount: 0,
+        paymentMethod: "7-11 取貨付款",
+        shippingFee: 0,
+        finalAmount: 0,
+      },
     };
+  },
+  created() {
+    
+  },
+  methods: {
+    renderShippingFee(index) {
+      if (index < 2) {
+        if (this.totalInfo.amount < 1000) {
+          this.totalInfo.shippingFee = 50;
+          this.totalInfo.finalAmount = this.totalInfo.amount + 50;
+        } else {
+          this.totalInfo.finalAmount = this.totalInfo.amount;
+        }
+      } else {
+        if (this.totalInfo.amount < 1200) {
+          this.totalInfo.shippingFee = 60;
+          this.totalInfo.finalAmount = this.totalInfo.amount + 60;
+        } else {
+          this.totalInfo.finalAmount = this.totalInfo.amount;
+        }
+      }
+    },
+    saveBeforeNextStep() {
+      this.$emit("after-save", {
+        totalInfo: {
+          paymentMethod: this.totalInfo.paymentMethod,
+          shippingFee: this.totalInfo.shippingFee,
+          finalAmount: this.totalInfo.finalAmount,
+        },
+      });
+    },
+  },
+  watch: {
+    initialTotalInfo(newValue) {
+      this.totalInfo = {
+        ...this.totalInfo,
+        ...newValue,
+        paymentMethod: "7-11 取貨付款",
+      };
+      this.renderShippingFee(0);
+    },
   },
 };
 </script>
@@ -127,7 +210,7 @@ export default {
       border-radius: 50px;
       height: 21px;
       width: 21px;
-      position: relative;      
+      position: relative;
       margin-right: 20px;
       cursor: pointer;
 

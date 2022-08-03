@@ -69,45 +69,42 @@ export default {
   },
   methods: {
     renderStepper(currentStep) {
-      // const nowStep2 = [
-      //   { active: false, checked: true },
-      //   { active: true, checked: false },
-      //   { active: false, checked: false },
-      //   { active: false, checked: false },
-      // ];
-      // const nowStep3 = [
-      //   { active: false, checked: true },
-      //   { active: false, checked: true },
-      //   { active: true, checked: false },
-      //   { active: false, checked: false },
-      // ];
-      // const nowStep4 = [
-      //   { active: false, checked: true },
-      //   { active: false, checked: true },
-      //   { active: false, checked: true },
-      //   { active: true, checked: false },
-      // ];
       // step 1
-      console.log("renderstepper");
       if (currentStep === "1") {
-        return this.steps;
-        // step 2
-      } else if (currentStep === "2") {
-        console.log("renderstepper2");
         this.steps = this.steps.map((step) => {
           if (step.number === 1) {
             return {
               ...step,
+              active: true,
+              checked: false,
+            };
+          }
+          return {
+            ...step,
+            active: false,
+            checked: false,
+          };
+        });
+        // step 2
+      } else if (currentStep === "2") {
+        this.steps = this.steps.map((step) => {
+          if (step.number === 1) {
+            return {
+              ...step,
+              active: false,
               checked: true,
             };
           } else if (step.number === 2) {
             return {
               ...step,
               active: true,
+              checked: false,
             };
           }
           return {
             ...step,
+            active: false,
+            checked: false,
           };
         });
         // step 3
@@ -122,16 +119,20 @@ export default {
           } else if (step.number === 2) {
             return {
               ...step,
+              active: false,
               checked: true,
             };
           } else if (step.number === 3) {
             return {
               ...step,
               active: true,
+              checked: false,
             };
           }
           return {
             ...step,
+            active: false,
+            checked: false,
           };
         });
         // step 4
@@ -141,6 +142,7 @@ export default {
             return {
               ...step,
               active: true,
+              checked: false,
             };
           }
           return {
@@ -154,7 +156,7 @@ export default {
   },
   watch: {
     initialCurrentStep() {
-      this.renderStepper(this.initialCurrentStep);
+      this.renderStepper(this.initialCurrentStep);      
     },
   },
 };

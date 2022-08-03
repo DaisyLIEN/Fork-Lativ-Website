@@ -52,7 +52,7 @@ export default {
   .cards {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-        grid-column-gap: 10px;
+    grid-column-gap: 10px;
     grid-row-gap: 50px;
     justify-items: center;
   }

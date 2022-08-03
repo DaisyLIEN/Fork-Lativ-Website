@@ -1,86 +1,261 @@
 <template>
   <section class="wrapper-step-one">
-    <div class="allselect-toggle">
-      <input
-        type="checkbox"
-        name="allselect-toggle"
-        id="allselect-toggle-input"
-      />
-      <label for="allselect-toggle" class="allselect-toggle-label">全選</label>
-    </div>
-    <div class="item-card">
-      <div class="item-card-right">
-        <label for="select-toggle" class="select-toggle"
-          ><input type="checkbox" name="select-toggle" id="select-toggle"
-        /></label>
-        <div class="photo">
-          <router-link to="/"
-            ><img src="https://i.imgur.com/0Q3casO.jpg" alt=""
-          /></router-link>
+    <div class="itemList" v-if="cart.length > 0">
+      <div class="allselect-toggle">
+        <input
+          type="checkbox"
+          name="allselect-toggle"
+          id="allselect-toggle-input"
+          v-model="allSelect"
+        />
+        <label for="allselect-toggle" class="allselect-toggle-label"
+          >全選</label
+        >
+      </div>
+      <div class="item-card" v-for="item in cart" :key="cart.indexOf(item)">
+        <div class="item-card-right">
+          <label for="select-toggle" class="select-toggle"
+            ><input
+              type="checkbox"
+              name="select-toggle"
+              id="select-toggle"
+              v-model="item.isSelected"
+          /></label>
+          <div class="photo">
+            <router-link :to="{ name: 'detail', params: { id: item.id } }"
+              ><img :src="item.image" alt="shirt-image"
+            /></router-link>
+          </div>
+          <div class="text">
+            <div class="title">
+              <router-link :to="{ name: 'detail', params: { id: item.id } }">{{
+                item.title
+              }}</router-link>
+            </div>
+            <div class="colorsize">
+              <label for=""></label>
+              <select
+                name="colorsize"
+                id="colorsize"
+                required
+                v-model="item.size"
+              >
+                <option value="S" :selected="item.size === 'S'">
+                  {{ item.color }} - S
+                </option>
+                <option value="M" :selected="item.size === 'M'">
+                  {{ item.color }} - M
+                </option>
+                <option value="L" :selected="item.size === 'L'">
+                  {{ item.color }} - L
+                </option>
+              </select>
+            </div>
+          </div>
         </div>
+        <div class="item-card-left">
+          <div class="count">
+            <div
+              class="minus"
+              @click.stop.prevent="orderMinus(item, cart.indexOf(item))"
+            >
+              <font-awesome-icon icon="fa-solid fa-minus" />
+            </div>
+            <div class="number">{{ item.order }}</div>
+            <div
+              class="plus"
+              @click.stop.prevent="orderPlus(item, cart.indexOf(item))"
+            >
+              <font-awesome-icon icon="fa-solid fa-plus" />
+            </div>
+          </div>
+          <div class="price">
+            <div class="saleprice" v-show="item.onSale">
+              $&nbsp;{{ item.nowPrice }}
+            </div>
+            <div :class="['originprice', { sale: item.onSale }]">
+              $&nbsp;{{ item.originalPrice }}
+            </div>
+          </div>
+        </div>
+        <div
+          class="delete"
+          @click.stop.prevent="deleteItem(cart.indexOf(item))"
+        >
+          <font-awesome-icon icon="fa-solid fa-xmark" />
+        </div>
+      </div>
+      <div class="total">
         <div class="text">
-          <div class="title">
-            <router-link to="/">BROWN & FRIENDS印花T恤-01-女</router-link>
-          </div>
-          <div class="colorsize">
-            <label for=""></label>
-            <select name="colorsize" id="colorsize" required>
-              <option value="">咖啡 - S</option>
-              <option value="">咖啡 - M</option>
-              <option value="">咖啡 - L</option>
-            </select>
-          </div>
+          <p>
+            <span
+              >共&nbsp;<span>{{ totalOrder }}</span
+              >&nbsp;件商品</span
+            ><span>&nbsp;</span>
+          </p>
+          <p>
+            <span>商品金額</span><span>活動特惠</span><span>運費</span
+            ><span>帳戶折抵</span><span>&nbsp;</span>
+          </p>
+          <p>
+            <span
+              >$&nbsp;<span>{{ totalOriginalAmount }}</span></span
+            ><span
+              >-&nbsp;$&nbsp;<span>{{ eventAccount }}</span></span
+            ><span>未選擇</span><span>$&nbsp;<span>0</span></span
+            ><span>&nbsp;</span>
+          </p>
+        </div>
+        <div class="amount">
+          <p>
+            小計<span>NT$&nbsp;</span><span>{{ amount }}</span>
+          </p>
         </div>
       </div>
-      <div class="item-card-left">
-        <div class="count">
-          <div class="minus">
-            <font-awesome-icon icon="fa-solid fa-minus" />
-          </div>
-          <div class="number">1</div>
-          <div class="plus">
-            <font-awesome-icon icon="fa-solid fa-plus" />
-          </div>
-        </div>
-        <div class="price">
-          <div class="saleprice">$&nbsp;199</div>
-          <div class="originprice">$&nbsp;299</div>
-        </div>
-      </div>
-      <div class="delete">
-        <font-awesome-icon icon="fa-solid fa-xmark" />
+      <div class="button-panel">
+        <router-link :to="{ name: 'homePage' }"
+          ><button class="button button-primary">繼續購物</button></router-link
+        >
+        <router-link :to="{ name: 'shopping', params: { step: 2 } }"
+          ><button
+            class="button button-next"
+            @click.stop.prevent="saveBeforeNextStep()"
+          >
+            下一步
+          </button></router-link
+        >
       </div>
     </div>
-    <div class="total">
-      <div class="text">
-        <p>
-          <span>共&nbsp;<span>4</span>&nbsp;件商品</span><span>&nbsp;</span>
-        </p>
-        <p>
-          <span>商品金額</span><span>活動特惠</span><span>運費</span
-          ><span>帳戶折抵</span><span>&nbsp;</span>
-        </p>
-        <p>
-          <span>$&nbsp;<span>1,196</span></span
-          ><span>-&nbsp;$&nbsp;<span>300</span></span
-          ><span>未選擇</span><span>$&nbsp;<span>0</span></span
-          ><span>&nbsp;</span>
-        </p>
-      </div>
-      <div class="amount">
-        <p>小計<span>NT$&nbsp;</span><span>896</span></p>
-      </div>
-    </div>
-    <div class="button-panel">
+    <div class="no-item" v-else>
+      <font-awesome-icon icon="fa-solid fa-cart-arrow-down" class="icon-cart" />
+      <p>您的購物車中沒有商品</p>
       <router-link :to="{ name: 'homePage' }"
-        ><button class="button button-primary">繼續購物</button></router-link
-      >
-      <router-link :to="{ name: 'shopping', params: { step: 2 } }"
-        ><button class="button button-next">下一步</button></router-link
+        ><button class="button button-primary">去購物</button></router-link
       >
     </div>
   </section>
 </template>
+
+<script>
+export default {
+  props: {
+    initialCart: {
+      type: Array,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      cart: [],
+    };
+  },
+  created() {
+    this.addIsSelected();
+  },
+  methods: {
+    addIsSelected() {
+      this.cart = this.initialCart.map((item) => {
+        return {
+          ...item,
+          isSelected: true,
+        };
+      });
+    },
+    orderMinus(item, itemIndex) {
+      if (item.order === 1) return;
+
+      this.cart = this.cart.map((_item, index) => {
+        if (index === itemIndex) {
+          _item.order--;
+        }
+        return _item;
+      });
+    },
+    orderPlus(item, itemIndex) {
+      if (item.order === 99) return;
+
+      this.cart = this.cart.map((_item, index) => {
+        if (index === itemIndex) {
+          _item.order++;
+        }
+        return _item;
+      });
+    },
+    deleteItem(itemIndex) {
+      this.cart = this.cart.filter((_item, index) => index !== itemIndex);
+    },
+    saveStorage() {
+      const STORAGE_KEY = "myCart";
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.cart));
+    },
+    saveBeforeNextStep() {
+      this.$emit("after-save", {
+        totalInfo: {
+          totalOrder: this.totalOrder,
+          totalOriginalAmount: this.totalOriginalAmount,
+          eventAccount: this.eventAccount,
+          amount: this.amount,
+        },
+      });
+    },
+  },
+  computed: {
+    allSelect: {
+      get() {
+        return this.cart.every((item) => item.isSelected === true);
+      },
+      set(value) {
+        this.cart = this.cart.map((item) => ({
+          ...item,
+          isSelected: value,
+        }));
+      },
+    },
+    totalOrder() {
+      return this.cart
+        .map((item) => {
+          if (item.isSelected) {
+            return item.order;
+          }
+          return 0;
+        })
+        .reduce((prev, next) => prev + next, 0);
+    },
+    totalOriginalAmount() {
+      return this.cart
+        .map((item) => {
+          if (item.isSelected) {
+            return item.originalPrice * item.order;
+          }
+          return 0;
+        })
+        .reduce((prev, next) => prev + next, 0);
+    },
+    eventAccount() {
+      return this.cart
+        .map((item) => {
+          if (item.isSelected) {
+            return (item.originalPrice - item.nowPrice) * item.order;
+          }
+          return 0;
+        })
+        .reduce((prev, next) => prev + next, 0);
+    },
+    amount() {
+      return this.totalOriginalAmount - this.eventAccount;
+    },
+  },
+  watch: {
+    cart: {
+      handler: function () {
+        this.saveStorage();
+        console.log("changed");
+      },
+      deep: true,
+    },
+  },
+};
+</script>
 
 <style lang="scss" scoped>
 /* toggle */
@@ -113,7 +288,6 @@ input[type="checkbox"] {
   font-size: 15px;
   padding-left: 30px;
   border: 1px solid #ebebeb;
-  border-bottom: none;
   display: flex;
   align-items: center;
   label {
@@ -128,6 +302,7 @@ input[type="checkbox"] {
   align-items: center;
   height: 190px;
   border: 1px solid #ebebeb;
+  border-top: none;
   padding: 30px;
   font-size: 15px;
 
@@ -170,12 +345,14 @@ input[type="checkbox"] {
         border-top-left-radius: 6px;
         border-bottom-left-radius: 6px;
         border-right: none;
+        cursor: pointer;
       }
 
       .plus {
         border-top-right-radius: 6px;
         border-bottom-right-radius: 6px;
         border-left: none;
+        cursor: pointer;
       }
     }
 
@@ -186,7 +363,8 @@ input[type="checkbox"] {
         color: #cc4948;
       }
 
-      .originprice {
+      .originprice.sale {
+        margin-top: 10px;
         text-decoration: line-through;
       }
     }
@@ -196,6 +374,7 @@ input[type="checkbox"] {
     position: absolute;
     top: 20px;
     right: 30px;
+    cursor: pointer;
   }
 }
 
@@ -277,6 +456,28 @@ input[type="checkbox"] {
 
   .button-next {
     background-color: #5e3b25;
+  }
+}
+
+.no-item {
+  text-align: center;
+
+  .icon-cart {
+    font-size: 100px;
+  }
+
+  p {
+    margin: 20px 0 30px;
+    font-size: 15px;
+  }
+
+  button {
+    width: 180px;
+    height: 40px;
+    border-radius: 4px;
+    font-size: 15px;
+    color: #ffffff;
+    background-color: #c3a789;
   }
 }
 </style>

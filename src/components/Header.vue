@@ -18,6 +18,13 @@
         />
       </form>
     </div>
+    <div class="cart">
+      <router-link to="/shopping/1"
+        ><font-awesome-icon
+          class="icon-cart"
+          icon="fa-solid fa-cart-arrow-down"
+      /></router-link>
+    </div>
     <input
       type="checkbox"
       name="navbar-toggle"
@@ -42,12 +49,12 @@
       <ul class="nav-list">
         <li><router-link to="/">訂閱電子報</router-link></li>
         <li><router-link to="/">登入/註冊</router-link></li>
-        <li>
+        <li class="nav-cart">
           <router-link to="/shopping/1"
             ><font-awesome-icon
               icon="fa-solid fa-cart-arrow-down"
               bounce
-            />&nbsp;&nbsp;0個商品</router-link
+            />&nbsp;&nbsp;<span>0個商品</span></router-link
           >
         </li>
       </ul>
@@ -63,13 +70,9 @@ header {
   z-index: 999;
   width: 100%;
   height: 105px;
-  background: #ffffff;
-  /* 陰影 */
-  // -webkit-box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.1);
-  // -moz-box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0.1);
-  // box-shadow: 0px 2px 12px 0px rgba(0, 0, 0, 0, 0.1);
+  background: #ffffff;  
   display: grid;
-  grid-template-columns: 8fr 1fr 1fr;
+  grid-template-columns: 8fr 1fr 1fr 1fr;
   justify-items: center;
   align-items: center;
 
@@ -84,8 +87,12 @@ header {
     }
 
     .icon-search {
-      font-size: 20px;
+      font-size: 18px;
     }
+  }
+
+  .icon-cart {
+    font-size: 18px;
   }
 
   li {
@@ -100,7 +107,7 @@ header {
 
   /* Navbar */
   .nav {
-    grid-column: 1 / 4;
+    grid-column: 1 / 5;
     width: 100%;
     position: absolute;
     top: 100%;
@@ -109,6 +116,10 @@ header {
     transform-origin: top;
     transition: transform 0.3s ease-out;
 
+    &.clicked {
+      display: none;
+    }
+
     .nav-list {
       width: 100%;
       text-align: center;
@@ -116,6 +127,10 @@ header {
       li {
         margin: 1.4rem 0;
         opacity: 0;
+
+        &.nav-cart {
+          display: none;
+        }
       }
     }
   }
@@ -137,23 +152,30 @@ header {
 
   .navbar-toggle-label {
     display: flex;
+    align-items: center;
     margin: 0;
+    /* 把 label 空間撐大 */
+    position: absolute;
+    top: 0;
+    bottom: 42px;
+    right: 2%;
+    cursor: pointer;
   }
 
   /* 漢堡排 */
   .hamburger {
     position: relative;
-    width: 30px;
+    width: 28px;
     height: 3px;
-    background: #000000;
+    background: #706e6c;
 
     &::before,
     &::after {
       content: "";
       position: absolute;
-      width: 30px;
+      width: 28px;
       height: 3px;
-      background: #000000;
+      background: #706e6c;
     }
 
     &::before {
@@ -167,7 +189,7 @@ header {
 
   /* List-category */
   .list-category {
-    grid-column: 1 / 4;
+    grid-column: 1 / 5;
     grid-row: 2 / 3;
     width: 100%;
     height: 100%;
@@ -222,6 +244,10 @@ header {
       }
     }
 
+    .icon-cart {
+      display: none;
+    }
+
     .navbar-toggle-label {
       display: none;
     }
@@ -235,10 +261,10 @@ header {
         width: 240px;
         font-size: 10px;
 
-        li {          
+        li {
           flex: auto;
           margin: 0;
-          opacity: 1;          
+          opacity: 1;
 
           + li::before {
             content: "";
@@ -254,6 +280,10 @@ header {
             &:hover {
               text-decoration: underline;
             }
+          }
+
+          &.nav-cart {
+            display: initial;
           }
         }
       }

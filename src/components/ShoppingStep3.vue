@@ -1,6 +1,6 @@
 <template>
   <section class="wrapper-step-three">
-    <form action="">
+    <form action="" @submit.stop.prevent="handleSubmit">
       <!-- part-one -->
       <div class="recipient-info part part-one">
         <div class="title">收件人資訊</div>
@@ -11,6 +11,9 @@
             name="username"
             id="username"
             placeholder="輸入姓名"
+            minlength="2"
+            v-model="recipientInfo.username"
+            required
           />
         </div>
         <div class="form-row">
@@ -20,29 +23,37 @@
             name="telephone"
             id="telephone"
             placeholder="輸入有效手機號碼"
+            minlength="10"
+            maxlength="10"
+            v-model="recipientInfo.telephone"
+            required
           />
         </div>
-        <div class="form-row">
+        <div class="form-row" v-if="initialPaymentMethod.includes('取貨付款')">
           <label for="store">取貨門市</label>
-          <select name="area" id="area" required>
-            <option value="" selected disabled>請選擇取件門市</option>
-            <option value="">冬念門市</option>
-            <option value="">耀明門市</option>
-            <option value="">三重門市</option>
+          <select name="area" id="area" v-model="recipientInfo.pickUpStore">
+            <option value="none" selected disabled>請選擇取件門市</option>
+            <option value="冬念門市">冬念門市</option>
+            <option value="耀明門市">耀明門市</option>
+            <option value="三重門市">三重門市</option>
           </select>
         </div>
-        <div class="form-row">
+        <div class="form-row" v-else>
           <label for="address">宅配地址</label>
           <input
             type="text"
             name="address"
             id="address"
             placeholder="輸入地址"
+            v-model="recipientInfo.address"
           />
         </div>
       </div>
       <!-- part-two -->
-      <div class="credit-card part part-two">
+      <div
+        class="credit-card part part-two"
+        v-if="initialPaymentMethod === '信用卡付款'"
+      >
         <div class="title">信用卡資訊</div>
         <div class="form-row">
           <label for="cardnumber">信用卡卡號</label>
@@ -51,11 +62,20 @@
             name="cardnumber"
             id="cardnumber"
             placeholder="限使用台灣核發之信用卡"
+            minlength="16"
+            maxlength="16"
+            v-model="creditCard.cardNumber"
           />
         </div>
         <div class="form-row">
           <label for="expdate">有效期限&emsp;</label>
-          <input type="text" name="expdate" id="expdate" placeholder="MM/YY" />
+          <input
+            type="text"
+            name="expdate"
+            id="expdate"
+            placeholder="MM/YY"
+            v-model="creditCard.validDate"
+          />
         </div>
         <div class="form-row">
           <label for="cvv">背面末三碼</label>
@@ -64,6 +84,9 @@
             name="cvv"
             id="cvv"
             placeholder="信用卡背面末三碼"
+            minlength="3"
+            maxlength="3"
+            v-model="creditCard.ccv"
           />
         </div>
         <div class="form-row credit-notice">
@@ -77,91 +100,104 @@
       <div class="invoice-type part part-three">
         <div class="title">發票類型</div>
         <div class="form-row">
-          <div :class="['form-line', { active: selected === 'personal' }]">
+          <div :class="['form-line', { active: invoiceType === 'personal' }]">
             <input
               type="radio"
               name="type"
               id="personal"
               value="personal"
-              v-model="selected"
+              v-model="invoiceType"
             />
             <label for="personal">電子發票 - 個人</label>
           </div>
-          <div :class="['form-line', { active: selected === 'company' }]">
+          <div :class="['form-line', { active: invoiceType === 'company' }]">
             <input
               type="radio"
               name="type"
               id="company"
               value="company"
-              v-model="selected"
+              v-model="invoiceType"
             />
             <label for="company">電子發票 - 公司</label>
           </div>
-          <div :class="['form-line', { active: selected === 'donate' }]">
+          <div :class="['form-line', { active: invoiceType === 'donate' }]">
             <input
               type="radio"
               name="type"
               id="donate"
               value="donate"
-              v-model="selected"
+              minlength="8"
+              maxlength="8"
+              v-model="invoiceType"
             />
             <label for="donate">捐贈發票</label>
           </div>
-          <div :class="['form-line', { active: selected === 'barcode' }]">
+          <div :class="['form-line', { active: invoiceType === 'barcode' }]">
             <input
               type="radio"
               name="type"
               id="barcode"
               value="barcode"
-              v-model="selected"
+              v-model="invoiceType"
             />
             <label for="barcode">個人-手機條碼載具</label>
           </div>
         </div>
         <div class="form-row">
-          <div class="text-personal" v-show="selected === 'personal'">
+          <div class="text-personal" v-show="invoiceType === 'personal'">
             依財政部規定，發票已託管，無需開立紙本發票。
           </div>
-          <div class="text-company" v-show="selected === 'company'">
+          <div class="text-company" v-show="invoiceType === 'company'">
             <div>
-              <label for="number">統一編號&emsp;</label>
+              <label for="company-number">統一編號&emsp;</label>
               <input
                 type="text"
-                name="number"
-                id="number"
+                name="company-number"
+                id="company-number"
                 placeholder="請輸入統一編號"
+                minlength="8"
+                maxlength="8"
+                v-model="invoice.company"
               />
             </div>
             <p>
               根據財政部「電子發票實施作業要點」，於消費開立「三聯電子發票」不主動寄送，lativ亦會將發票號碼上傳至政府平台。
             </p>
           </div>
-          <div class="text-donate" v-show="selected === 'donate'">
+          <div class="text-donate" v-show="invoiceType === 'donate'">
             <label for="donation">捐贈單位：</label>
-            <select name="donation" id="donation" required>
-              <option value="" selected disabled>請選擇捐贈單位</option>
-              <option value="">財團法人創世社會福利基金會</option>
-              <option value="">財團法人博幼社會福利基金會</option>
-              <option value="">財團法人門諾社會福利慈善事業基金會</option>
+            <select name="donation" id="donation" v-model="invoice.donate">
+              <option value="none" selected disabled>請選擇捐贈單位</option>
+              <option value="財團法人創世社會福利基金會">
+                財團法人創世社會福利基金會
+              </option>
+              <option value="財團法人博幼社會福利基金會">
+                財團法人博幼社會福利基金會
+              </option>
+              <option value="財團法人門諾社會福利慈善事業基金會">
+                財團法人門諾社會福利慈善事業基金會
+              </option>
             </select>
           </div>
-          <div class="text-barcode" v-show="selected === 'barcode'">
+          <div class="text-barcode" v-show="invoiceType === 'barcode'">
             <div>
-              <label for="number"></label>
+              <label for="barcode-number"></label>
               <input
                 type="text"
-                name="number"
-                id="number"
+                name="barcode-number"
+                id="barcode-number"
                 placeholder="請輸入手機條碼(限大寫英數字)"
+                v-model="invoice.barcode"
               />
             </div>
             <div>
-              <label for="number-confirm"></label>
+              <label for="barcode-number-confirm"></label>
               <input
                 type="text"
-                name="number-confirm"
-                id="number-confirm"
+                name="barcode-number-confirm"
+                id="barcode-number-confirm"
                 placeholder="請再次輸入手機條碼(限大寫英數字)"
+                v-model="confirmBarcode"
               />
             </div>
           </div>
@@ -170,12 +206,25 @@
       <!-- part-four -->
       <div class="return-notice part part-four">
         <div class="form-row">
-          <input type="checkbox" name="return-notice" id="return-notice" />
+          <input
+            type="checkbox"
+            name="return-notice"
+            id="return-notice"
+            value="agreeFastRefund"
+            v-model="recipientInfo.fastRefund"
+          />
           <label for="return-notice"
             >我同意辦理退貨時，由 lativ
             代為處理電子發票及銷貨退回折讓單以加速退款作業。</label
           >
         </div>
+      </div>
+      <!-- submit-panel -->
+      <div class="submit-panel">
+        <label class="submit-cart-label">
+          <input type="submit" class="submit-cart-input" value="" />
+          送出</label
+        >
       </div>
     </form>
     <div class="button-panel">
@@ -184,19 +233,108 @@
           重選付款方式
         </button></router-link
       >
-      <router-link :to="{ name: 'shopping', params: { step: 4 } }"
-        ><button class="button button-next">送出</button></router-link
-      >
     </div>
   </section>
 </template>
 
 <script>
 export default {
+  props: {
+    initialPaymentMethod: {
+      type: String,
+      required: true,
+    },
+  },
   data() {
     return {
-      selected: "",
+      invoiceType: "",
+      recipientInfo: {
+        username: "",
+        telephone: "",
+        pickUpStore: "",
+        address: "",
+        fastRefund: false,
+      },
+      creditCard: {
+        cardNumber: "",
+        validDate: "",
+        ccv: "",
+      },
+      invoice: {
+        company: "", // 統一編號
+        donate: "",
+        barcode: "",
+      },
+      confirmBarcode: "",
     };
+  },
+  methods: {
+    handleSubmit(e) {
+      // 表單驗證
+      const method = this.initialPaymentMethod;
+
+      if (this.recipientInfo.username === "") {
+        alert("請確認收件人姓名");
+        return;
+      } else if (this.recipientInfo.telephone === "") {
+        alert("請確認手機號碼");
+        return;
+      }
+
+      // -- 超商取貨
+      if (method.includes("取貨付款")) {
+        if (this.recipientInfo.pickUpStore === "") {
+          alert("請確認收件門市");
+          return;
+        }
+        // -- 宅配
+      } else {
+        if (this.recipientInfo.address === "") {
+          alert("請確認收件地址");
+          return;
+        }
+
+        if (method === "信用卡付款") {
+          for (let key in this.creditCard) {
+            if (this.creditCard[key] === "") {
+              alert("請確認信用卡資訊");
+              return;
+            }
+          }
+        }
+      }
+
+      // -- 發票類型
+      if (this.invoiceType === "") {
+        alert("請選擇發票方式");
+        return;
+      } else {
+        if (this.invoiceType === "company") {
+          if (this.invoice.company === "") {
+            alert("請確認公司之統一編號");
+            return;
+          }
+        } else if (this.invoiceType === "donation") {
+          if (this.invoice.donate === "") {
+            alert("請確認捐贈單位");
+            return;
+          }
+        } else if (this.invoiceType === "barcode") {
+          if (this.invoice.barcode === "") {
+            alert("請確認載具號碼");
+            return;
+          }
+          if (this.invoice.barcode !== this.confirmBarcode) {
+            alert("請確認手機載具是否相同");
+            return;
+          }
+        }
+      }
+      
+      const form = e.target;
+      const formData = new FormData(form);
+      this.$emit('after-save', formData)
+    },
   },
 };
 </script>
@@ -234,6 +372,7 @@ select {
 .wrapper-step-three {
   font-size: 15px;
   background-color: #fbfbfb;
+  position: relative;
 
   form {
     .part {
@@ -348,7 +487,7 @@ select {
     .part-four {
       .form-row {
         margin: 0 30px;
-        height: 100%;
+        height: 60px;
         font-size: 13px;
         color: #a8a8a8;
         flex-wrap: nowrap;
@@ -376,6 +515,29 @@ select {
         }
       }
     }
+
+    .submit-panel {
+      order: 5;
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      text-align: center;
+
+      label {
+        width: 180px;
+        height: 40px;
+        background-color: #5e3b25;
+        border-radius: 4px;
+        font-size: 15px;
+        line-height: 22px;
+        color: #ffffff;
+        cursor: pointer;
+      }
+
+      input {
+        visibility: hidden;
+      }
+    }
   }
 }
 
@@ -385,21 +547,13 @@ select {
   justify-content: space-between;
   margin-top: 40px;
 
-  .button-primary,
-  .button-next {
+  .button-primary {
     width: 180px;
     height: 40px;
     border-radius: 4px;
     font-size: 15px;
     color: #ffffff;
-  }
-
-  .button-primary {
     background-color: #c3a789;
-  }
-
-  .button-next {
-    background-color: #5e3b25;
   }
 }
 

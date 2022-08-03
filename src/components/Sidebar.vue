@@ -53,8 +53,7 @@
 export default {
   props: {
     initialGroup: {
-      type: String,
-      // required: true,
+      type: String,      
     },
   },
   data() {

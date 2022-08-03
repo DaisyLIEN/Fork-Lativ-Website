@@ -8,14 +8,7 @@
         <!-- left-content -->
         <div class="left-content">
           <div class="photo">
-            <img
-              :src="
-                currentShirtImage === ''
-                  ? shirt.color[0].image
-                  : currentShirtImage
-              "
-              alt="shirt-image"
-            />
+            <img :src="selectedShirtImage" alt="shirt-image" />
           </div>
           <div class="magnifying">
             <font-awesome-icon
@@ -127,7 +120,7 @@
                 </div>
                 <div class="plus" @click="orderPlus()">+</div>
               </div>
-              <button class="add-to-cart" @click="saveStorage()">
+              <button class="add-to-cart" @click.stop.prevent="saveStorage()">
                 加入購物車
               </button>
             </div>
@@ -141,7 +134,7 @@
           v-for="image in shirt.image.detail"
           :key="shirt.image.detail.indexOf(image)"
           :src="image"
-          alt=""
+          alt="other-images"
         />
       </div>
     </section>
@@ -181,7 +174,7 @@ export default {
         group: "",
         category: [],
       },
-      currentShirtImage: "",
+      selectedShirtImage: "",
       selectedColor: "",
       selectedSize: "S",
       order: 1,
@@ -199,12 +192,13 @@ export default {
         return item.id === Number(this.currentId);
       });
       this.selectedColor = this.shirt.color[0].cname;
+      this.selectedShirtImage = this.shirt.color[0].image;
     },
     renderShirtImage(color) {
       const colorArray = this.shirt.color;
       colorArray.find((item) => {
         if (item.cname === color) {
-          this.currentShirtImage = item.image;
+          this.selectedShirtImage = item.image;
         }
       });
     },
@@ -227,9 +221,13 @@ export default {
       const orderInfo = {
         id: this.shirt.id,
         title: this.shirt.title,
+        image: this.selectedShirtImage,
         color: this.selectedColor,
         size: this.selectedSize,
         order: this.order,
+        originalPrice: this.shirt.originalPrice,
+        nowPrice: this.shirt.nowPrice,
+        onSale: this.shirt.onSale,
       };
 
       // 取出目前購物車有的商品 ( localStorage )
@@ -263,16 +261,10 @@ export default {
       }
 
       localStorage.setItem(STORAGE_KEY, JSON.stringify(orderList));
+
+      alert('已加入購物車')
     },
-  },
-  watch: {
-    // shirt(newValue) {
-    //   this.shirt = {
-    //     ...this.shirt,
-    //     ...newValue,
-    //   };
-    // },
-  },
+  },  
 };
 </script>
 
