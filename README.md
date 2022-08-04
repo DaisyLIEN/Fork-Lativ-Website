@@ -24,7 +24,7 @@ $ git clone https://github.com/DaisyLIEN/Fork-Lativ-Website.git
 
 2. 到此專案資料夾
 ```
-$ cd fork-lativ-web-vue
+$ cd Fork-Lativ-Website
 ```
 
 3. 安裝套件
