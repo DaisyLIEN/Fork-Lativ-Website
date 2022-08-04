@@ -64,8 +64,7 @@ export default {
     };
   },
   created() {
-    this.renderStepper(this.initialCurrentStep);
-    console.log("stepper:", this.initialCurrentStep);
+    this.renderStepper(this.initialCurrentStep);    
   },
   methods: {
     renderStepper(currentStep) {

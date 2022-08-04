@@ -249,7 +249,6 @@ export default {
     cart: {
       handler: function () {
         this.saveStorage();
-        console.log("changed");
       },
       deep: true,
     },

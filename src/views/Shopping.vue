@@ -59,6 +59,8 @@ export default {
       recipientInfo: {},
       creditCard: {},
       invoice: {},
+      formData: {},
+      orderList: [],
     };
   },
   created() {
@@ -90,8 +92,13 @@ export default {
     },
     handleAfterSaveStep3(formData) {
       for (const [key, value] of formData) {
-        console.log(`key:${key}, value:${value}`);
+        if (value !== "") {
+          this.formData[key] = value;
+        }
       }
+
+      this.orderList = Object.entries(this.formData).join("；\n");
+      alert(this.orderList);
 
       this.$router.push({ name: "shopping", params: { step: 4 } });
     },

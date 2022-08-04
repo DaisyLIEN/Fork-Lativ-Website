@@ -117,10 +117,7 @@ export default {
         finalAmount: 0,
       },
     };
-  },
-  created() {
-    
-  },
+  },  
   methods: {
     renderShippingFee(index) {
       if (index < 2) {

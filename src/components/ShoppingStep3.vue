@@ -314,7 +314,7 @@ export default {
             alert("請確認公司之統一編號");
             return;
           }
-        } else if (this.invoiceType === "donation") {
+        } else if (this.invoiceType === "donate") {
           if (this.invoice.donate === "") {
             alert("請確認捐贈單位");
             return;
