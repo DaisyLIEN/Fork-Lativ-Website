@@ -117,7 +117,13 @@ export default {
         finalAmount: 0,
       },
     };
-  },  
+  },
+  created() {
+    this.totalInfo = {
+      ...this.totalInfo,
+      ...this.initialTotalInfo,
+    };
+  },
   methods: {
     renderShippingFee(index) {
       if (index < 2) {

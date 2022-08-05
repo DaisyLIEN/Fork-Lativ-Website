@@ -185,8 +185,7 @@ export default {
       this.cart = this.cart.filter((_item, index) => index !== itemIndex);
     },
     saveStorage() {
-      const STORAGE_KEY = "myCart";
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.cart));
+      this.$emit("after-save-order", this.cart);
     },
     saveBeforeNextStep() {
       this.$emit("after-save", {
@@ -251,6 +250,9 @@ export default {
         this.saveStorage();
       },
       deep: true,
+    },
+    initialCart(newValue) {      
+      this.cart = newValue;
     },
   },
 };

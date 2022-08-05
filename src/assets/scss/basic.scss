@@ -1,12 +1,12 @@
-#fork-lativ-web-vue {  
+#fork-lativ-web-vue {
   max-width: 1180px;
-  margin: 0 auto;  
+  margin: 0 auto;
   color: #706e6c;
   font-size: 12px;
 }
 
 .wrapper {
-  padding-top: 105px;
+  padding: 125px 10px 0;
 }
 
 a {
@@ -19,6 +19,6 @@ a:hover {
 
 @media screen and (min-width: 768px) {
   .wrapper {
-      padding-top: 10px;
-    }
+    padding-top: 10px;
+  }
 }

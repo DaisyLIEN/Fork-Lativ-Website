@@ -3,17 +3,18 @@
     <Stepper :initial-current-step="currentStep" />
     <ShoppingStep1
       v-show="currentStep === '1'"
-      :initial-cart="cart"
+      :initial-cart="myCart.cart"
+      @after-save-order="handleAfterSaveOrder"
       @after-save="handleAfterSaveStep1"
     />
     <ShoppingStep2
       v-show="currentStep === '2'"
-      :initial-total-info="totalInfo"
+      :initial-total-info="myCart.totalInfo"
       @after-save="handleAfterSaveStep2"
     />
     <ShoppingStep3
       v-show="currentStep === '3'"
-      :initial-payment-method="totalInfo.paymentMethod"
+      :initial-payment-method="myCart.totalInfo.paymentMethod"
       @after-save="handleAfterSaveStep3"
     />
     <ShoppingStep4 v-show="currentStep === '4'" />
@@ -38,27 +39,21 @@ export default {
   data() {
     return {
       currentStep: "",
-      cart: [
-        {
-          id: -1,
-          title: "",
-          color: "",
-          size: "",
-          order: 1,
+      myCart: {
+        cart: [],
+        totalInfo: {
+          totalOrder: 0,
+          totalOriginalAmount: 0,
+          eventAccount: 0,
+          amount: 0,
+          paymentMethod: "未選擇",
+          shippingFee: 0,
+          finalAmount: 0,
         },
-      ],
-      totalInfo: {
-        totalOrder: 0,
-        totalOriginalAmount: 0,
-        eventAccount: 0,
-        amount: 0,
-        paymentMethod: "未選擇",
-        shippingFee: 0,
-        finalAmount: 0,
+        recipientInfo: {},
+        creditCard: {},
+        invoice: {},
       },
-      recipientInfo: {},
-      creditCard: {},
-      invoice: {},
       formData: {},
       orderList: [],
     };
@@ -70,27 +65,44 @@ export default {
   methods: {
     getCartFromStorage() {
       const STORAGE_KEY = "myCart";
-      this.cart = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+      const myCartFromStorage =
+        JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
+      this.myCart = {
+        ...this.myCart,
+        ...myCartFromStorage,
+      };
+    },
+    saveToStorage() {
+      const STORAGE_KEY = "myCart";
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(this.myCart));
+    },
+    handleAfterSaveOrder(payload) {
+      this.myCart.cart = payload;
+      this.saveToStorage();
     },
     handleAfterSaveStep1(payload) {
       const { totalInfo } = payload;
-      this.totalInfo = {
-        ...this.totalInfo,
+      this.myCart.totalInfo = {
+        ...this.myCart.totalInfo,
         ...totalInfo,
       };
+      this.saveToStorage();
 
       this.$router.push({ name: "shopping", params: { step: 2 } });
     },
     handleAfterSaveStep2(payload) {
       const { totalInfo } = payload;
-      this.totalInfo = {
-        ...this.totalInfo,
+      this.myCart.totalInfo = {
+        ...this.myCart.totalInfo,
         ...totalInfo,
       };
+      this.saveToStorage();
 
       this.$router.push({ name: "shopping", params: { step: 3 } });
     },
     handleAfterSaveStep3(formData) {
+      const STORAGE_KEY = "myCart";
+      
       for (const [key, value] of formData) {
         if (value !== "") {
           this.formData[key] = value;
@@ -99,6 +111,9 @@ export default {
 
       this.orderList = Object.entries(this.formData).join("；\n");
       alert(this.orderList);
+
+      localStorage.removeItem(STORAGE_KEY);
+      this.myCart.cart = []      
 
       this.$router.push({ name: "shopping", params: { step: 4 } });
     },

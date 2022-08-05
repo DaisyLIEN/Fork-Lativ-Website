@@ -232,18 +232,19 @@ export default {
 
       // 取出目前購物車有的商品 ( localStorage )
       const STORAGE_KEY = "myCart";
-      const orderList = JSON.parse(localStorage.getItem(STORAGE_KEY)) || [];
+      const orderList = JSON.parse(localStorage.getItem(STORAGE_KEY)) || {};
 
       // 把商品加入購物車
       let isOnlyAddOrderNumber = false;
 
       // -- 首次加入時，購物車為空
-      if (orderList.length === 0) {
-        orderList.push({ ...orderInfo });
+      if (Object.keys(orderList).length === 0) {
+        orderList.cart = [];
+        orderList.cart.push({ ...orderInfo });
       } else {
         // -- 購物車已有商品時，先找是否有同樣商品
         // ---- 是，增加訂購數量
-        orderList.forEach((item) => {
+        orderList.cart.forEach((item) => {
           if (
             item.id === orderInfo.id &&
             item.color === orderInfo.color &&
@@ -256,15 +257,15 @@ export default {
 
         // ---- 否，把新商品加入
         if (isOnlyAddOrderNumber === false) {
-          orderList.push({ ...orderInfo });
+          orderList.cart.push({ ...orderInfo });
         }
       }
 
       localStorage.setItem(STORAGE_KEY, JSON.stringify(orderList));
 
-      alert('已加入購物車')
+      alert("已加入購物車");
     },
-  },  
+  },
 };
 </script>
 

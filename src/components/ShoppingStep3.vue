@@ -267,7 +267,7 @@ export default {
       },
       confirmBarcode: "",
     };
-  },
+  },  
   methods: {
     handleSubmit(e) {
       // 表單驗證

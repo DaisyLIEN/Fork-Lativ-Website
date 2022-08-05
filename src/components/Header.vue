@@ -54,7 +54,7 @@
             ><font-awesome-icon
               icon="fa-solid fa-cart-arrow-down"
               bounce
-            />&nbsp;&nbsp;<span>0個商品</span></router-link
+            />&nbsp;&nbsp;<span>查看購物車</span></router-link
           >
         </li>
       </ul>
